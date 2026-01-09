@@ -6,6 +6,7 @@ import netifaces as ni
 import time
 from paho.mqtt import client as mqtt_client
 import random
+import json
 
 #           sensorConfiguration.py
 #
