@@ -49,18 +49,10 @@ location = {
 "longitude": longitude
 }
 
-json_location = json.dumps(location)
+json_location = json.dumps(location, separators=(",", ":"))
 
 # Send sensor location to InfluxDB
 if uploadTechnology.lower() == "wifi":
-    #publish_mqtt_message(json_location, f"mqtt/wifi/sensorLocation/{influxdb_bucket}/{ip_address}/{sensorName}")
-
-    cmd =f"curl -i   --request POST \"http://{cloud_ip_addr}:8086/api/v2/write?org={influx_org}&bucket={influx_bucket}&precision=s\"  \
-                     --header \"Authorization: Token {influx_token}\"  \
-                     --header \"Content-Type: text/plain; charset=utf-8\"  \
-                     --header \"Accept: application/json\" \
-                     --data-binary 'sensorLocation,sensor_UUID={sensor_UUID},sensor_name={sensor_name} latitude={latitude},longitude={longitude} {str(int( (dataAtual - dt.datetime(1970,1,1)).total_seconds()))}'"
-    os.system(cmd)
+    publish_location_mqtt_message(json_location, f"sttoolkit-test/mqtt/wifi/sensorLocation/{influx_bucket}/{ip_address}/{sensor_name}/{sensor_UUID}")
 
     print(f"Location '({latitude},{longitude})' was sent to the cloud server for sensor '{sensor_name}'.")
-
